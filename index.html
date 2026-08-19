@@ -1,79 +1,194 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>REYMAN.BD</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>REYMAN.BD | Online Shopping</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<header>
-    <h1>REYMAN.BD</h1>
+    <!-- HEADER -->
+    <header>
 
-    <nav>
-        <a href="#">Home</a>
-        <a href="#">Products</a>
-        <a href="#">Contact</a>
-    </nav>
-</header>
+        <div class="logo">
+            REYMAN.BD
+        </div>
 
+        <nav>
+            <a href="#">Home</a>
+            <a href="#products">Products</a>
+            <a href="#contact">Contact</a>
+            <a href="#">🛒 Cart</a>
+        </nav>
 
-<section class="hero">
-
-    <h2>Welcome to REYMAN.BD</h2>
-
-    <p>
-        Your trusted online store for Gadgets, Clothes & Accessories
-    </p>
-
-    <button>
-        Shop Now
-    </button>
-
-</section>
+    </header>
 
 
-<section class="products">
+    <!-- HERO SECTION -->
+    <section class="hero">
 
-    <h2>Featured Products</h2>
+        <div class="hero-content">
 
-    <div class="card">
+            <h1>Shop Smart.<br>Shop REYMAN.BD.</h1>
 
-        <h3>Smart Gadgets</h3>
-        <p>Latest technology products</p>
+            <p>
+                Gadgets, Fashion & Accessories —
+                Everything you need in one place.
+            </p>
 
-    </div>
+            <a href="#products" class="shop-btn">
+                Shop Now
+            </a>
 
+        </div>
 
-    <div class="card">
-
-        <h3>Fashion Collection</h3>
-        <p>Premium clothes & accessories</p>
-
-    </div>
-
-
-    <div class="card">
-
-        <h3>Accessories</h3>
-        <p>Stylish products for everyone</p>
-
-    </div>
-
-</section>
+    </section>
 
 
-<footer>
+    <!-- CATEGORIES -->
+    <section class="categories">
 
-<p>
-© 2026 REYMAN.BD All Rights Reserved
-</p>
+        <h2>Shop By Category</h2>
 
-</footer>
+        <div class="category-container">
 
-<script src="script.js"></script>
+            <div class="category-card">
+                <div class="category-icon">📱</div>
+                <h3>Gadgets</h3>
+                <p>Latest tech products</p>
+            </div>
+
+            <div class="category-card">
+                <div class="category-icon">👕</div>
+                <h3>Fashion</h3>
+                <p>Trendy clothes & wear</p>
+            </div>
+
+            <div class="category-card">
+                <div class="category-icon">🎧</div>
+                <h3>Accessories</h3>
+                <p>Stylish everyday items</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- PRODUCTS -->
+    <section class="products" id="products">
+
+        <h2>Featured Products</h2>
+
+        <div class="product-container">
+
+            <div class="product-card">
+
+                <div class="product-image">
+                    📱
+                </div>
+
+                <h3>Smart Gadget</h3>
+
+                <p>
+                    Latest technology product
+                </p>
+
+                <strong>৳ 999</strong>
+
+                <button onclick="addToCart('Smart Gadget', 999)">
+                    Add to Cart
+                </button>
+
+            </div>
+
+
+            <div class="product-card">
+
+                <div class="product-image">
+                    👕
+                </div>
+
+                <h3>Premium T-Shirt</h3>
+
+                <p>
+                    Stylish & comfortable
+                </p>
+
+                <strong>৳ 799</strong>
+
+                <button onclick="addToCart('Premium T-Shirt', 799)">
+                    Add to Cart
+                </button>
+
+            </div>
+
+
+            <div class="product-card">
+
+                <div class="product-image">
+                    🎧
+                </div>
+
+                <h3>Wireless Earbuds</h3>
+
+                <p>
+                    Clear sound & modern design
+                </p>
+
+                <strong>৳ 1,499</strong>
+
+                <button onclick="addToCart('Wireless Earbuds', 1499)">
+                    Add to Cart
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CONTACT -->
+    <section class="contact" id="contact">
+
+        <h2>Contact REYMAN.BD</h2>
+
+        <p>
+            Have any questions? Contact us anytime.
+        </p>
+
+        <button onclick="contactUs()">
+            Contact Us
+        </button>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer>
+
+        <h3>REYMAN.BD</h3>
+
+        <p>
+            Gadgets • Fashion • Accessories
+        </p>
+
+        <p>
+            © 2026 REYMAN.BD — All Rights Reserved
+        </p>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
 </body>
 
 </html>
