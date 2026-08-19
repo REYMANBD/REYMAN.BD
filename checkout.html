@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>REYMAN.BD | Checkout</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        REYMAN.BD
+    </div>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="index.html#products">Products</a>
+        <a href="cart.html">🛒 Cart</a>
+    </nav>
+
+</header>
+
+
+<section class="products">
+
+    <h2>Checkout</h2>
+
+    <div class="product-card">
+
+        <h3>Customer Information</h3>
+
+        <form id="orderForm">
+
+            <input
+                type="text"
+                id="customerName"
+                placeholder="Your Name"
+                required
+            >
+
+            <br><br>
+
+            <input
+                type="tel"
+                id="phone"
+                placeholder="Phone Number"
+                required
+            >
+
+            <br><br>
+
+            <textarea
+                id="address"
+                placeholder="Delivery Address"
+                rows="5"
+                required
+            ></textarea>
+
+            <br><br>
+
+            <h3 id="orderTotal"></h3>
+
+            <button type="submit">
+                Place Order
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <h3>REYMAN.BD</h3>
+
+    <p>Gadgets • Fashion • Accessories</p>
+
+    <p>© 2026 REYMAN.BD — All Rights Reserved</p>
+
+</footer>
+
+
+<script>
+
+const cart =
+    JSON.parse(localStorage.getItem("reymanCart")) || [];
+
+let total = 0;
+
+cart.forEach(product => {
+    total += product.price;
+});
+
+document.getElementById("orderTotal").innerText =
+    "Order Total: ৳ " + total;
+
+
+document.getElementById("orderForm").addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        if (cart.length === 0) {
+
+            alert("Your cart is empty!");
+
+            return;
+        }
+
+        const name =
+            document.getElementById("customerName").value;
+
+        const phone =
+            document.getElementById("phone").value;
+
+        const address =
+            document.getElementById("address").value;
+
+
+        const order = {
+
+            customerName: name,
+
+            phone: phone,
+
+            address: address,
+
+            products: cart,
+
+            total: total,
+
+            date: new Date().toLocaleString()
+
+        };
+
+
+        localStorage.setItem(
+            "latestOrder",
+            JSON.stringify(order)
+        );
+
+
+        alert(
+            "Order placed successfully! Thank you, " +
+            name
+        );
+
+
+        localStorage.removeItem("reymanCart");
+
+        window.location.href = "index.html";
+
+    }
+);
+
+</script>
+
+</body>
+
+</html>
