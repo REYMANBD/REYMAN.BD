@@ -108,60 +108,50 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const SUPABASE_URL = "https://yrrhcxhjqttyjwdelkyb.supabase.co/rest/v1/";
-const SUPABASE_KEY = "sb_publishable_7VPqTiccK6qEycDOMSprvA_AZ2ncp8k";
+    const SUPABASE_URL = "https://yrrhcxhjqttyjwdelkyb.supabase.co/rest/v1/";
+    const SUPABASE_KEY = "sb_publishable_7VPqTiccK6qEycDOMSprvA_AZ2ncp8k";
 
-const supabaseClient = supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
-        document.getElementById("loginForm").addEventListener(
-    "submit",
-    async function(event) {
+    const supabaseClient = supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
 
-        event.preventDefault();
+    document.getElementById("loginForm").addEventListener(
+        "submit",
+        async function(event) {
 
-        const email =
-            document.getElementById("email").value;
+            event.preventDefault();
 
-        const password =
-            document.getElementById("password").value;
+            const email =
+                document.getElementById("email").value;
 
-        const message =
-            document.getElementById("message");
+            const password =
+                document.getElementById("password").value;
 
-        message.innerText = "Logging in...";
+            const message =
+                document.getElementById("message");
 
-        const { data, error } =
-            await supabaseClient.auth.signInWithPassword({
-                email: email,
-                password: password
-            });
+            message.innerText = "Logging in...";
 
-        if (error) {
+            const { error } =
+                await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+            if (error) {
+                message.innerText =
+                    "Login failed: " + error.message;
+                return;
+            }
 
             message.innerText =
-                "Login failed: " + error.message;
+                "Login successful!";
 
-            return;
+            window.location.href = "admin-dashboard.html";
         }
-
-        message.innerText =
-            "Login successful!";
-
-        window.location.href = "admin-dashboard.html";
-    }
-);
-            "submit",
-            function(event) {
-
-                event.preventDefault();
-
-                document.getElementById("message").innerText =
-                    "Connecting to secure login...";
-            }
-        );
-    </script>
+    );
+</script>
 
 </body>
 
