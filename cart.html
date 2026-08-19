@@ -125,20 +125,19 @@
             displayCart();
         }
 
+function checkout() {
 
-        function checkout() {
+    if (cart.length === 0) {
 
-            if (cart.length === 0) {
+        alert("Your cart is empty!");
 
-                alert("Your cart is empty!");
+        return;
+    }
 
-                return;
-            }
-
-            alert(
-                "Checkout system will be added in the next step."
-            );
-        }
+    window.location.href = "checkout.html";
+}
+        
+        
 
 
         displayCart();
