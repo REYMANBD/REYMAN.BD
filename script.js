@@ -14,7 +14,7 @@ const SUPABASE_URL =
 
 const SUPABASE_KEY =
     
-sb_publishable_7VPqTiccK6qEycDOMSprvA_AZ2ncp8k
+"sb_publishable_7VPqTiccK6qEycDOMSprvA_AZ2ncp8k"
 
 const supabaseClient =
     supabase.createClient(
