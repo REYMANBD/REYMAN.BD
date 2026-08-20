@@ -166,7 +166,59 @@
             <p id="status"></p>
 
         </div>
+<div id="editProductForm" style="display:none;">
 
+    <h3>Edit Product</h3>
+
+    <input
+        id="editName"
+        type="text"
+        placeholder="Product name"
+    >
+
+    <br><br>
+
+    <input
+        id="editPrice"
+        type="number"
+        placeholder="Price"
+    >
+
+    <br><br>
+
+    <input
+        id="editOldPrice"
+        type="number"
+        placeholder="Old price"
+    >
+
+    <br><br>
+
+    <input
+        id="editCategory"
+        type="text"
+        placeholder="Category"
+    >
+
+    <br><br>
+
+    <input
+        id="editStock"
+        type="number"
+        placeholder="Stock"
+    >
+
+    <br><br>
+
+    <button onclick="updateProduct()">
+        Update Product
+    </button>
+
+    <button onclick="hideEditProduct()">
+        Cancel
+    </button>
+
+</div>
     </div>
 
 
@@ -203,7 +255,7 @@
     /* =========================
        SUPABASE
     ========================= */
-
+let editingProductId = null;
     const SUPABASE_URL =
         "https://yrrhcxhjqttyjwdelkyb.supabase.co";
 
@@ -241,12 +293,56 @@
         ).style.display = "none";
 
     }
+function hideEditProduct() {
 
+    document.getElementById(
+        "editProductForm"
+    ).style.display = "none";
+
+}
+
+
+function editProduct(id) {
+
+    editingProductId = id;
+
+    const product = products.find(
+        item => item.id === id
+    );
+
+    if (!product) {
+        return;
+    }
+
+
+    document.getElementById("editName").value =
+        product.name;
+
+    document.getElementById("editPrice").value =
+        product.price;
+
+    document.getElementById("editOldPrice").value =
+        product.Old_price || "";
+
+    document.getElementById("editCategory").value =
+        product.category;
+
+    document.getElementById("editStock").value =
+        product.stock;
+
+
+    document.getElementById(
+        "editProductForm"
+    ).style.display = "block";
+
+}
+
+}
 
     /* =========================
        LOAD PRODUCTS
     ========================= */
-
+let products = [];
     async function loadProducts() {
 
         const productCount =
@@ -262,7 +358,7 @@
             await supabaseClient
                 .from("products")
                 .select("*");
-
+products = data;
 
         if (error) {
 
@@ -305,7 +401,9 @@ productList.innerHTML += `
 <button onclick="deleteProduct('${product.id}')">
 Delete
 </button>
-
+<button onclick="editProduct('${product.id}')">
+Edit
+</button>
 </div>
 `;
 });
@@ -623,7 +721,62 @@ async function deleteProduct(id) {
 
 }
     loadProducts();
+async function updateProduct() {
 
+    if (!editingProductId) {
+        alert("No product selected");
+        return;
+    }
+
+
+    const name =
+        document.getElementById("editName").value;
+
+    const price =
+        document.getElementById("editPrice").value;
+
+    const oldPrice =
+        document.getElementById("editOldPrice").value;
+
+    const category =
+        document.getElementById("editCategory").value;
+
+    const stock =
+        document.getElementById("editStock").value;
+
+
+    const { error } =
+        await supabaseClient
+            .from("products")
+            .update({
+                name: name,
+                price: Number(price),
+                Old_price: oldPrice
+                    ? Number(oldPrice)
+                    : null,
+                category: category,
+                stock: Number(stock)
+            })
+            .eq("id", editingProductId);
+
+
+    if (error) {
+
+        alert(
+            "Update failed: " + error.message
+        );
+
+        return;
+    }
+
+
+    alert("Product updated successfully!");
+
+    hideEditProduct();
+
+    loadProducts();
+
+}
 </script>
 
 </body>
