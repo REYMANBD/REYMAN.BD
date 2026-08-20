@@ -96,10 +96,9 @@
 
 </main>
 
-<script>  
-        
-
+<script>
     const SUPABASE_URL = "https://yrrhcxhjqttyjwdelkyb.supabase.co";
+
     const SUPABASE_KEY = "sb_publishable_7VPqTiccK6qEycDOMSprvA_AZ2ncp8k";
 
     const supabaseClient = supabase.createClient(
@@ -107,58 +106,84 @@
         SUPABASE_KEY
     );
 
-     function showAddProduct() {
-    document.getElementById("addProductForm").style.display = "block";
-}
 
-async function addProduct() {
-
-    const name =
-        document.getElementById("productName").value;
-
-    const price =
-        document.getElementById("productPrice").value;
-
-    const old_price =
-        document.getElementById("productOldPrice").value;
-
-    const category =
-        document.getElementById("productCategory").value;
-
-    const description =
-        document.getElementById("productDescription").value;
-
-    const stock =
-        document.getElementById("productStock").value;
-
-    const { error } =
-        await supabaseClient
-            .from("products")
-            .insert([
-                {
-                    name: name,
-                    price: price,
-                    old_price: old_price,
-                    category: category,
-                    description: description,
-                    stock: stock,
-                    featured: false
-                }
-            ]);
-
-    if (error) {
-        alert("Product add failed: " + error.message);
-        return;
+    function showAddProduct() {
+        document.getElementById("addProductForm").style.display = "block";
     }
 
-    alert("Product added successfully!");
 
-    document.getElementById("addProductForm").style.display = "none";
+    async function loadProducts() {
+
+        const { data, error } =
+            await supabaseClient
+                .from("products")
+                .select("*");
+
+        if (error) {
+            document.getElementById("productCount").innerText =
+                "Error loading products";
+            console.error(error);
+            return;
+        }
+
+        document.getElementById("productCount").innerText =
+            data.length + " product(s) found";
+    }
+
+
+    async function addProduct() {
+
+        const name =
+            document.getElementById("productName").value;
+
+        const price =
+            document.getElementById("productPrice").value;
+
+        const old_price =
+            document.getElementById("productOldPrice").value;
+
+        const category =
+            document.getElementById("productCategory").value;
+
+        const description =
+            document.getElementById("productDescription").value;
+
+        const stock =
+            document.getElementById("productStock").value;
+
+
+        const { error } =
+            await supabaseClient
+                .from("products")
+                .insert([
+                    {
+                        name: name,
+                        price: price,
+                        old_price: old_price,
+                        category: category,
+                        description: description,
+                        stock: stock,
+                        featured: false
+                    }
+                ]);
+
+
+        if (error) {
+            alert("Product add failed: " + error.message);
+            return;
+        }
+
+
+        alert("Product added successfully!");
+
+        document.getElementById("addProductForm").style.display = "none";
+
+        loadProducts();
+    }
+
 
     loadProducts();
-}
 
-loadProducts();  }
 </script>
 
 </body>
