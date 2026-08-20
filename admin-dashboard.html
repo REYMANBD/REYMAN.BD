@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>REYMAN.BD Admin</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,11 +33,29 @@
             margin-bottom: 20px;
         }
 
+        input,
+        textarea {
+            width: 100%;
+            max-width: 500px;
+            padding: 12px;
+            margin-bottom: 5px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            min-height: 100px;
+        }
+
         button {
             padding: 12px 18px;
             border: 0;
             border-radius: 7px;
             cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        #addProductForm {
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -46,71 +68,159 @@
 
 <main>
 
+    <!-- PRODUCTS -->
+
     <div class="card">
+
         <h2>Products</h2>
+
         <button onclick="showAddProduct()">
-    Add Product
-</button>
-        <p id="productCount">Loading products...</p>
+            Add Product
+        </button>
+
+        <p id="productCount">
+            Loading products...
+        </p>
 
         <button onclick="loadProducts()">
             Refresh Products
-  
         </button>
-        <div id="addProductForm" style="display:none; margin-top:20px;">
 
-    <input id="productName" type="text" placeholder="Product name">
-    <br><br>
 
-    <input id="productPrice" type="number" placeholder="Price">
-    <br><br>
+        <!-- ADD PRODUCT FORM -->
 
-    <input id="productOldPrice" type="number" placeholder="Old price">
-    <br><br>
+        <div id="addProductForm" style="display:none;">
 
-    <input id="productCategory" type="text" placeholder="Category">
-    <br><br>
+            <h3>Add New Product</h3>
 
-    <textarea id="productDescription" placeholder="Description"></textarea>
-    <br><br>
+            <input
+                id="productName"
+                type="text"
+                placeholder="Product name"
+            >
 
-    <input id="productStock" type="number" placeholder="Stock">
-    <br><br>
+            <br><br>
 
-    <button onclick="addProduct()">
-        Save Product
-    </button>
+            <input
+                id="productImage"
+                type="file"
+                accept="image/*"
+            >
 
-</div>
+            <br><br>
+
+            <input
+                id="productPrice"
+                type="number"
+                placeholder="Price"
+            >
+
+            <br><br>
+
+            <input
+                id="productOldPrice"
+                type="number"
+                placeholder="Old price"
+            >
+
+            <br><br>
+
+            <input
+                id="productCategory"
+                type="text"
+                placeholder="Category"
+            >
+
+            <br><br>
+
+            <textarea
+                id="productDescription"
+                placeholder="Description"
+            ></textarea>
+
+            <br><br>
+
+            <input
+                id="productStock"
+                type="number"
+                placeholder="Stock"
+            >
+
+            <br><br>
+
+            <button onclick="addProduct()">
+                Save Product
+            </button>
+
+        </div>
+
     </div>
 
+
+    <!-- ORDERS -->
+
     <div class="card">
+
         <h2>Orders</h2>
-        <p>Order management will be added next.</p>
+
+        <p>
+            Order management will be added next.
+        </p>
+
     </div>
 
+
+    <!-- SETTINGS -->
+
     <div class="card">
+
         <h2>Settings</h2>
-        <p>Website settings will be added next.</p>
+
+        <p>
+            Website settings will be added next.
+        </p>
+
     </div>
 
 </main>
 
+
 <script>
-    const SUPABASE_URL = "https://yrrhcxhjqttyjwdelkyb.supabase.co";
 
-    const SUPABASE_KEY = "sb_publishable_7VPqTiccK6qEycDOMSprvA_AZ2ncp8k";
+    /* =========================
+       SUPABASE CONNECTION
+    ========================= */
 
-    const supabaseClient = supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
+    const SUPABASE_URL =
+        "https://yrrhcxhjqttyjwdelkyb.supabase.co";
 
+    const SUPABASE_KEY =
+        "sb_publishable_7VPqTiccK6qEycDOMSprvA_AZ2ncp8k";
+
+
+    const supabaseClient =
+        supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+
+    /* =========================
+       SHOW ADD PRODUCT FORM
+    ========================= */
 
     function showAddProduct() {
-        document.getElementById("addProductForm").style.display = "block";
+
+        document.getElementById(
+            "addProductForm"
+        ).style.display = "block";
+
     }
 
+
+    /* =========================
+       LOAD PRODUCTS
+    ========================= */
 
     async function loadProducts() {
 
@@ -119,38 +229,151 @@
                 .from("products")
                 .select("*");
 
+
         if (error) {
-            document.getElementById("productCount").innerText =
+
+            document.getElementById(
+                "productCount"
+            ).innerText =
                 "Error loading products";
+
             console.error(error);
+
             return;
         }
 
-        document.getElementById("productCount").innerText =
+
+        document.getElementById(
+            "productCount"
+        ).innerText =
             data.length + " product(s) found";
+
     }
 
+
+    /* =========================
+       ADD PRODUCT
+    ========================= */
 
     async function addProduct() {
 
         const name =
-            document.getElementById("productName").value;
+            document.getElementById(
+                "productName"
+            ).value.trim();
+
 
         const price =
-            document.getElementById("productPrice").value;
+            document.getElementById(
+                "productPrice"
+            ).value;
+
 
         const old_price =
-            document.getElementById("productOldPrice").value;
+            document.getElementById(
+                "productOldPrice"
+            ).value;
+
 
         const category =
-            document.getElementById("productCategory").value;
+            document.getElementById(
+                "productCategory"
+            ).value.trim();
+
 
         const description =
-            document.getElementById("productDescription").value;
+            document.getElementById(
+                "productDescription"
+            ).value.trim();
+
 
         const stock =
-            document.getElementById("productStock").value;
+            document.getElementById(
+                "productStock"
+            ).value;
 
+
+        const imageFile =
+            document.getElementById(
+                "productImage"
+            ).files[0];
+
+
+        /* CHECK IMAGE */
+
+        if (!imageFile) {
+
+            alert(
+                "Please select a product image."
+            );
+
+            return;
+        }
+
+
+        /* CHECK REQUIRED FIELDS */
+
+        if (!name || !price || !category) {
+
+            alert(
+                "Please fill Product Name, Price and Category."
+            );
+
+            return;
+        }
+
+
+        /* =========================
+           UPLOAD IMAGE
+        ========================= */
+
+        const fileName =
+            Date.now() + "-" + imageFile.name;
+
+
+        const { error: uploadError } =
+            await supabaseClient
+                .storage
+                .from("products")
+                .upload(
+                    fileName,
+                    imageFile
+                );
+
+
+        if (uploadError) {
+
+            alert(
+                "Image upload failed: " +
+                uploadError.message
+            );
+
+            console.error(uploadError);
+
+            return;
+        }
+
+
+        /* =========================
+           GET PUBLIC IMAGE URL
+        ========================= */
+
+        const { data: publicUrlData } =
+            supabaseClient
+                .storage
+                .from("products")
+                .getPublicUrl(
+                    fileName
+                );
+
+
+        const imagePath =
+            publicUrlData.publicUrl;
+
+
+        /* =========================
+           INSERT PRODUCT
+        ========================= */
 
         const { error } =
             await supabaseClient
@@ -159,32 +382,91 @@
                     {
                         name: name,
                         price: price,
-                      Old_price: old_price,
+                        Old_price: old_price,
                         category: category,
                         description: description,
                         stock: stock,
-                        featured: false
+                        featured: false,
+                        image_path: imagePath
                     }
                 ]);
 
 
+        /* INSERT ERROR */
+
         if (error) {
-            alert("Product add failed: " + error.message);
+
+            alert(
+                "Product add failed: " +
+                error.message
+            );
+
+            console.error(error);
+
             return;
         }
 
 
-        alert("Product added successfully!");
+        /* SUCCESS */
 
-        document.getElementById("addProductForm").style.display = "none";
+        alert(
+            "Product added successfully!"
+        );
+
+
+        /* HIDE FORM */
+
+        document.getElementById(
+            "addProductForm"
+        ).style.display = "none";
+
+
+        /* CLEAR FORM */
+
+        document.getElementById(
+            "productName"
+        ).value = "";
+
+        document.getElementById(
+            "productImage"
+        ).value = "";
+
+        document.getElementById(
+            "productPrice"
+        ).value = "";
+
+        document.getElementById(
+            "productOldPrice"
+        ).value = "";
+
+        document.getElementById(
+            "productCategory"
+        ).value = "";
+
+        document.getElementById(
+            "productDescription"
+        ).value = "";
+
+        document.getElementById(
+            "productStock"
+        ).value = "";
+
+
+        /* REFRESH PRODUCT COUNT */
 
         loadProducts();
+
     }
 
+
+    /* =========================
+       INITIAL LOAD
+    ========================= */
 
     loadProducts();
 
 </script>
 
 </body>
+
 </html>
