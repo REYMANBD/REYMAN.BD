@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+                <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -109,7 +109,7 @@
 
             <br><br>
 
-            <input
+      input
                 id="productPrice"
                 type="number"
                 placeholder="Price"
@@ -195,8 +195,8 @@
         "https://yrrhcxhjqttyjwdelkyb.supabase.co";
 
     const SUPABASE_KEY =
-        "sb_publishable_7VPqTiccK6qEycDOMSprvA_AZ2ncp8k";
-
+        
+"sb_publishable_7VPqTiccK6qEycDOMSprvA_AZ2ncp8k";
 
     const supabaseClient =
         supabase.createClient(
@@ -226,7 +226,7 @@
 
         const { data, error } =
             await supabaseClient
-                .from("Products")
+                .from("products")
                 .select("*");
 
 
@@ -334,7 +334,7 @@
         const { error: uploadError } =
             await supabaseClient
                 .storage
-                .from("products")
+                .from("Product-images")
                 .upload(
                     fileName,
                     imageFile
@@ -361,7 +361,7 @@
         const { data: publicUrlData } =
             supabaseClient
                 .storage
-                .from("product-images")
+                .from("Product-images")
                 .getPublicUrl(
                     fileName
                 );
@@ -377,7 +377,7 @@
 
         const { error } =
             await supabaseClient
-                .from("product-images")
+                .from("products")
                 .insert([
                     {
                         name: name,
@@ -452,7 +452,7 @@
         ).value = "";
 
 
-        /* REFRESH PRODUCT COUNT */
+        /* REFRESH */
 
         loadProducts();
 
