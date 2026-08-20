@@ -305,7 +305,7 @@ function hideEditProduct() {
 function editProduct(id) {
 
     editingProductId = id;
-
+console.log("Editing ID:", id);
     const product = products.find(
         item => item.id === id
     );
