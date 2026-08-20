@@ -1,4 +1,4 @@
-                <!DOCTYPE html>
+      <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -38,7 +38,7 @@
             width: 100%;
             max-width: 500px;
             padding: 12px;
-            margin-bottom: 5px;
+            margin-top: 5px;
             box-sizing: border-box;
         }
 
@@ -51,11 +51,17 @@
             border: 0;
             border-radius: 7px;
             cursor: pointer;
-            margin-bottom: 10px;
+            margin: 5px 0;
         }
 
         #addProductForm {
+            display: none;
             margin-top: 20px;
+        }
+
+        #status {
+            margin-top: 15px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -74,10 +80,6 @@
 
         <h2>Products</h2>
 
-        <button onclick="showAddProduct()">
-            Add Product
-        </button>
-
         <p id="productCount">
             Loading products...
         </p>
@@ -86,10 +88,16 @@
             Refresh Products
         </button>
 
+        <br>
+
+        <button onclick="showAddProduct()">
+            Add Product
+        </button>
+
 
         <!-- ADD PRODUCT FORM -->
 
-        <div id="addProductForm" style="display:none;">
+        <div id="addProductForm">
 
             <h3>Add New Product</h3>
 
@@ -109,7 +117,7 @@
 
             <br><br>
 
-      input
+            <input
                 id="productPrice"
                 type="number"
                 placeholder="Price"
@@ -122,8 +130,7 @@
                 type="number"
                 placeholder="Old price"
             >
-
-            <br><br>
+        <br><br>
 
             <input
                 id="productCategory"
@@ -151,6 +158,12 @@
             <button onclick="addProduct()">
                 Save Product
             </button>
+
+            <button onclick="hideAddProduct()">
+                Cancel
+            </button>
+
+            <p id="status"></p>
 
         </div>
 
@@ -188,15 +201,14 @@
 <script>
 
     /* =========================
-       SUPABASE CONNECTION
+       SUPABASE
     ========================= */
 
     const SUPABASE_URL =
         "https://yrrhcxhjqttyjwdelkyb.supabase.co";
 
     const SUPABASE_KEY =
-        
-"sb_publishable_7VPqTiccK6qEycDOMSprvA_AZ2ncp8k";
+        "sb_publishable_7VPqTiccK6qEycDOMSprvA_AZ2ncp8k";
 
     const supabaseClient =
         supabase.createClient(
@@ -206,7 +218,7 @@
 
 
     /* =========================
-       SHOW ADD PRODUCT FORM
+       SHOW FORM
     ========================= */
 
     function showAddProduct() {
@@ -219,10 +231,32 @@
 
 
     /* =========================
+       HIDE FORM
+    ========================= */
+
+    function hideAddProduct() {
+
+        document.getElementById(
+            "addProductForm"
+        ).style.display = "none";
+
+    }
+
+
+    /* =========================
        LOAD PRODUCTS
     ========================= */
 
     async function loadProducts() {
+
+        const productCount =
+            document.getElementById(
+                "productCount"
+            );
+
+        productCount.innerText =
+            "Loading products...";
+
 
         const { data, error } =
             await supabaseClient
@@ -232,21 +266,21 @@
 
         if (error) {
 
-            document.getElementById(
-                "productCount"
-            ).innerText =
-                "Error loading products";
+            console.error(
+                "Product loading error:",
+                error
+            );
 
-            console.error(error);
+            productCount.innerText =
+                "Error loading products";
 
             return;
         }
 
 
-        document.getElementById(
-            "productCount"
-        ).innerText =
-            data.length + " product(s) found";
+        productCount.innerText =
+            data.length +
+            " product(s) found";
 
     }
 
@@ -256,6 +290,12 @@
     ========================= */
 
     async function addProduct() {
+
+        const status =
+            document.getElementById(
+                "status"
+            );
+
 
         const name =
             document.getElementById(
@@ -269,7 +309,7 @@
             ).value;
 
 
-        const old_price =
+        const oldPrice =
             document.getElementById(
                 "productOldPrice"
             ).value;
@@ -299,39 +339,68 @@
             ).files[0];
 
 
-        /* CHECK IMAGE */
+        /* =========================
+           VALIDATION
+        ========================= */
+
+        if (!name) {
+
+            alert("Enter product name.");
+
+            return;
+        }
+
+
+        if (!price) {
+
+            alert("Enter product price.");
+
+            return;
+        }
+
+
+        if (!category) {
+
+            alert("Enter product category.");
+
+            return;
+        }
+
 
         if (!imageFile) {
 
-            alert(
-                "Please select a product image."
-            );
+            alert("Please select a product image.");
 
             return;
         }
 
 
-        /* CHECK REQUIRED FIELDS */
+        status.innerText =
+            "Uploading image...";
 
-        if (!name || !price || !category) {
 
-            alert(
-                "Please fill Product Name, Price and Category."
-            );
+        /* =========================
+           IMAGE FILE NAME
+        ========================= */
 
-            return;
-        }
+        const safeFileName =
+            imageFile.name
+                .replace(/[^a-zA-Z0-9._-]/g, "-");
+
+
+        const fileName =
+            Date.now() +
+            "-" +
+            safeFileName;
 
 
         /* =========================
            UPLOAD IMAGE
         ========================= */
 
-        const fileName =
-            Date.now() + "-" + imageFile.name;
-
-
-        const { error: uploadError } =
+        const {
+            error: uploadError
+        } =
             await supabaseClient
                 .storage
                 .from("Product-images")
@@ -343,22 +412,30 @@
 
         if (uploadError) {
 
+            console.error(
+                "Image upload error:",
+                uploadError
+            );
+
+            status.innerText =
+                "";
+
             alert(
                 "Image upload failed: " +
                 uploadError.message
             );
-
-            console.error(uploadError);
 
             return;
         }
 
 
         /* =========================
-           GET PUBLIC IMAGE URL
+           PUBLIC IMAGE URL
         ========================= */
 
-        const { data: publicUrlData } =
+        const {
+            data: publicUrlData
+        } =
             supabaseClient
                 .storage
                 .from("Product-images")
@@ -372,56 +449,71 @@
 
 
         /* =========================
-           INSERT PRODUCT
+           SAVE PRODUCT
         ========================= */
 
-        const { error } =
+        status.innerText =
+            "Saving product...";
+
+
+        const {
+            error: productError
+        } =
             await supabaseClient
                 .from("products")
                 .insert([
                     {
                         name: name,
-                        price: price,
-                        Old_price: old_price,
+                        price: Number(price),
+                        Old_price: oldPrice
+                            ? Number(oldPrice)
+                            : null,
                         category: category,
                         description: description,
-                        stock: stock,
+                        stock: stock
+                            ? Number(stock)
+                            : 0,
                         featured: false,
                         image_path: imagePath
                     }
                 ]);
 
 
-        /* INSERT ERROR */
+        if (productError) {
 
-        if (error) {
+            console.error(
+                "Product insert error:",
+                productError
+            );
+
+            status.innerText =
+                "";
 
             alert(
                 "Product add failed: " +
-                error.message
+                productError.message
             );
-
-            console.error(error);
 
             return;
         }
 
 
-        /* SUCCESS */
+        /* =========================
+           SUCCESS
+        ========================= */
+
+        status.innerText =
+            "Product added successfully!";
+
 
         alert(
             "Product added successfully!"
         );
 
 
-        /* HIDE FORM */
-
-        document.getElementById(
-            "addProductForm"
-        ).style.display = "none";
-
-
-        /* CLEAR FORM */
+        /* =========================
+           CLEAR FORM
+        ========================= */
 
         document.getElementById(
             "productName"
@@ -452,7 +544,16 @@
         ).value = "";
 
 
-        /* REFRESH */
+        /* =========================
+           HIDE FORM
+        ========================= */
+
+        hideAddProduct();
+
+
+        /* =========================
+           REFRESH COUNT
+        ========================= */
 
         loadProducts();
 
@@ -460,7 +561,7 @@
 
 
     /* =========================
-       INITIAL LOAD
+       START
     ========================= */
 
     loadProducts();
