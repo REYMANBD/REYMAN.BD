@@ -107,24 +107,11 @@
         SUPABASE_KEY
     );
 
-    async function loadProducts() {
+     function showAddProduct() {
+    document.getElementById("addProductForm").style.display = "block";
+}
 
-        const { data, error } =
-            await supabaseClient
-                .from("products")
-                .select("*");
-
-        if (error) {
-            document.getElementById("productCount").innerText =
-                "Error loading products";
-            return;
-        }
-
-        document.getElementById("productCount").innerText =
-            data.length + " product(s) found";
-    }
-function showAddProduct() {
-    async function addProduct() {
+async function addProduct() {
 
     const name =
         document.getElementById("productName").value;
@@ -170,9 +157,8 @@ function showAddProduct() {
 
     loadProducts();
 }
-    document.getElementById("addProductForm").style.display = "block";
-}
-    loadProducts();
+
+loadProducts();  }
 </script>
 
 </body>
