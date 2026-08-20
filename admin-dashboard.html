@@ -288,16 +288,26 @@ productList.innerHTML = "";
 
 data.forEach(product => {
 
-    productList.innerHTML += `
-        <div style="border:1px solid #ddd;padding:15px;margin-top:10px;border-radius:10px;">
-            <img src="${product.image_path}" width="100">
-            <h3>${product.name}</h3>
-            <p>Price: ${product.price}</p>
-            <p>Stock: ${product.stock}</p>
-            <p>Category: ${product.category}</p>
-        </div>
-    `;
+    
+productList.innerHTML += `
+<div style="border:1px solid #ddd;padding:15px;margin-top:10px;border-radius:10px;">
 
+<img src="${product.image_path}" width="100">
+
+<h3>${product.name}</h3>
+
+<p>Price: ${product.price}</p>
+
+<p>Stock: ${product.stock}</p>
+
+<p>Category: ${product.category}</p>
+
+<button onclick="deleteProduct('${product.id}')">
+Delete
+</button>
+
+</div>
+`;
 });
     }
 
