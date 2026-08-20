@@ -48,11 +48,40 @@
 
     <div class="card">
         <h2>Products</h2>
+        <button onclick="showAddProduct()">
+    Add Product
+</button>
         <p id="productCount">Loading products...</p>
 
         <button onclick="loadProducts()">
             Refresh Products
+  
         </button>
+        <div id="addProductForm" style="display:none; margin-top:20px;">
+
+    <input id="productName" type="text" placeholder="Product name">
+    <br><br>
+
+    <input id="productPrice" type="number" placeholder="Price">
+    <br><br>
+
+    <input id="productOldPrice" type="number" placeholder="Old price">
+    <br><br>
+
+    <input id="productCategory" type="text" placeholder="Category">
+    <br><br>
+
+    <textarea id="productDescription" placeholder="Description"></textarea>
+    <br><br>
+
+    <input id="productStock" type="number" placeholder="Stock">
+    <br><br>
+
+    <button onclick="addProduct()">
+        Save Product
+    </button>
+
+</div>
     </div>
 
     <div class="card">
@@ -94,7 +123,55 @@
         document.getElementById("productCount").innerText =
             data.length + " product(s) found";
     }
+function showAddProduct() {
+    async function addProduct() {
 
+    const name =
+        document.getElementById("productName").value;
+
+    const price =
+        document.getElementById("productPrice").value;
+
+    const old_price =
+        document.getElementById("productOldPrice").value;
+
+    const category =
+        document.getElementById("productCategory").value;
+
+    const description =
+        document.getElementById("productDescription").value;
+
+    const stock =
+        document.getElementById("productStock").value;
+
+    const { error } =
+        await supabaseClient
+            .from("products")
+            .insert([
+                {
+                    name: name,
+                    price: price,
+                    old_price: old_price,
+                    category: category,
+                    description: description,
+                    stock: stock,
+                    featured: false
+                }
+            ]);
+
+    if (error) {
+        alert("Product add failed: " + error.message);
+        return;
+    }
+
+    alert("Product added successfully!");
+
+    document.getElementById("addProductForm").style.display = "none";
+
+    loadProducts();
+}
+    document.getElementById("addProductForm").style.display = "block";
+}
     loadProducts();
 </script>
 
