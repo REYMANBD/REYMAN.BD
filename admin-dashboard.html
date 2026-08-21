@@ -63,7 +63,19 @@ Welcome Admin
 </p>
 
 </div>
+<div class="card">
 
+<h2>
+Products
+</h2>
+
+<p id="productCount">
+Loading products...
+</p>
+
+<div id="productList"></div>
+
+</div>
 
 </main>
 
@@ -84,7 +96,70 @@ supabase.createClient(
 
 
 console.log("Supabase Connected");
+async function loadProducts() {
 
+    const productCount =
+        document.getElementById("productCount");
+
+    const productList =
+        document.getElementById("productList");
+
+
+    productCount.innerText =
+        "Loading products...";
+
+
+    const { data, error } =
+        await supabaseClient
+            .from("products")
+            .select("*");
+
+
+    if (error) {
+
+        productCount.innerText =
+            "Error loading products";
+
+        console.log(error);
+
+        return;
+    }
+
+
+    productCount.innerText =
+        data.length + " product(s) found";
+
+
+    productList.innerHTML = "";
+
+
+    data.forEach(product => {
+
+        productList.innerHTML += `
+
+        <div style="
+        border:1px solid #ddd;
+        padding:15px;
+        margin-top:10px;
+        border-radius:10px;
+        ">
+
+        <h3>${product.name}</h3>
+
+        <p>
+        Price: ${product.price}
+        </p>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+
+loadProducts();
 </script>
 </body>
 
