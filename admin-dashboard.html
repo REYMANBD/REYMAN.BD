@@ -74,7 +74,39 @@ Loading products...
 </p>
 
 <div id="productList"></div>
+<button onclick="showAddProduct()">
+Add Product
+</button>
 
+
+<div id="addProductForm" style="display:none;">
+
+<h3>Add New Product</h3>
+
+
+<input id="productName" placeholder="Product name">
+
+<br><br>
+
+<input id="productPrice" type="number" placeholder="Price">
+
+<br><br>
+
+<input id="productImage" type="file" accept="image/*">
+
+<br><br>
+
+<button onclick="addProduct()">
+Save Product
+</button>
+
+
+<button onclick="hideAddProduct()">
+Cancel
+</button>
+
+
+</div>
 </div>
 
 </main>
@@ -158,7 +190,64 @@ async function loadProducts() {
 
 }
 
+function showAddProduct() {
 
+    document.getElementById(
+        "addProductForm"
+    ).style.display = "block";
+
+}
+
+
+function hideAddProduct() {
+
+    document.getElementById(
+        "addProductForm"
+    ).style.display = "none";
+
+}
+async function addProduct() {
+
+    const name =
+        document.getElementById("productName").value;
+
+    const price =
+        document.getElementById("productPrice").value;
+
+
+    const { error } =
+        await supabaseClient
+            .from("products")
+            .insert([
+                {
+                    name: name,
+                    price: Number(price)
+                }
+            ]);
+
+
+    if (error) {
+
+        alert(
+            "Product add failed"
+        );
+
+        console.log(error);
+
+        return;
+    }
+
+
+    alert(
+        "Product added successfully"
+    );
+
+
+    hideAddProduct();
+
+    loadProducts();
+
+}
 loadProducts();
 </script>
 </body>
