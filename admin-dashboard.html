@@ -218,7 +218,7 @@ async function addProduct() {
 
     const price =
         document.getElementById("productPrice").value;
-
+const oldPrice = price;
 const category =
     document.getElementById("productCategory").value;
     const { error } =
@@ -228,6 +228,7 @@ const category =
     {
         name: name,
         price: Number(price),
+     Old_price: Number(oldPrice),
         category: category
     }
 ]);
