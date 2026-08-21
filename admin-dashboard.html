@@ -89,7 +89,12 @@ Add Product
 <br><br>
 
 <input id="productPrice" type="number" placeholder="Price">
+<br><br>
 
+<input 
+id="productOldPrice" 
+type="number" 
+placeholder="Old Price">
 <br><br>
 <br><br>
 
@@ -218,6 +223,8 @@ async function addProduct() {
 
     const price =
         document.getElementById("productPrice").value;
+ const oldPrice =
+    document.getElementById("productOldPrice").value;
 const oldPrice = price;
 const category =
     document.getElementById("productCategory").value;
@@ -226,11 +233,13 @@ const category =
             .from("products")
 .insert([
     {
-        name: name,
-        price: Number(price),
-     Old_price: Number(oldPrice),
-        category: category
-    }
+    name: name,
+    price: Number(price),
+    Old_price: oldPrice
+        ? Number(oldPrice)
+        : 0,
+    category: category
+}
 ]);
 
 
