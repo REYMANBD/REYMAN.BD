@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>REYMAN.BD Admin Dashboard</title>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 
 body {
@@ -67,7 +67,25 @@ Welcome Admin
 
 </main>
 
+<script>
 
+const SUPABASE_URL =
+"https://yrrhcxhjqttyjwdelkyb.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_7VPqTiccK6qEycDOMSprvA_AZ2ncp8k";
+
+
+const supabaseClient =
+supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+console.log("Supabase Connected");
+
+</script>
 </body>
 
 </html>
