@@ -91,7 +91,12 @@ Add Product
 <input id="productPrice" type="number" placeholder="Price">
 
 <br><br>
+<br><br>
 
+<input 
+id="productCategory" 
+type="text" 
+placeholder="Category">
 <input id="productImage" type="file" accept="image/*">
 
 <br><br>
@@ -214,16 +219,18 @@ async function addProduct() {
     const price =
         document.getElementById("productPrice").value;
 
-
+const category =
+    document.getElementById("productCategory").value;
     const { error } =
         await supabaseClient
             .from("products")
-            .insert([
-                {
-                    name: name,
-                    price: Number(price)
-                }
-            ]);
+.insert([
+    {
+        name: name,
+        price: Number(price),
+        category: category
+    }
+]);
 
 
     if (error) {
