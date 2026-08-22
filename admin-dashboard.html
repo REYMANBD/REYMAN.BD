@@ -229,11 +229,11 @@ Delete
         return;
     }
 
+console.log("Deleted ID:", id);
+    
+alert("Product deleted");
 
-    alert("Product deleted");
-
-    loadProducts();
-
+await loadProducts();
 }  
 loadProducts();
 function showAddProduct() {
