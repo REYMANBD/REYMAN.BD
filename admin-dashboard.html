@@ -194,10 +194,10 @@ async function loadProducts() {
 <button>
 Edit
 </button>
-
-<button>
+<button onclick="deleteProduct('${product.id}')">
 Delete
 </button>
+
         </div>
 
         `;
@@ -205,6 +205,36 @@ Delete
     });
 
 }
+  async function deleteProduct(id) {
+alert("Delete function loaded");
+    const confirmDelete =
+        confirm("Delete this product?");
+
+    if (!confirmDelete) {
+        return;
+    }
+
+
+    const { error } =
+        await supabaseClient
+            .from("products")
+            .delete()
+            .eq("id", id);
+
+
+    if (error) {
+
+        alert(error.message);
+
+        return;
+    }
+
+
+    alert("Product deleted");
+
+    loadProducts();
+
+}  
 loadProducts();
 function showAddProduct() {
 
