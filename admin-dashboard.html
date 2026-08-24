@@ -1,38 +1,86 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>REYMAN.BD Admin Dashboard</title>
+
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
 <style>
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f5f5f5;
+body{
+    margin:0;
+    font-family:Arial;
+    background:#f5f5f5;
 }
 
-header {
-    background: #111;
-    color: white;
-    padding: 20px;
+
+header{
+
+    background:#111;
+    color:white;
+    padding:20px;
+
 }
 
-main {
-    padding: 20px;
+
+main{
+
+    padding:20px;
+
 }
 
-.card {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 20px;
+
+.card{
+
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+
 }
+
+
+input,textarea,select{
+
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+
+}
+
+
+button{
+
+    padding:10px 15px;
+    background:#111;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+
+}
+
+
+.product{
+
+    border:1px solid #ddd;
+    padding:15px;
+    margin-top:10px;
+    border-radius:10px;
+
+}
+
 
 </style>
+
 
 </head>
 
@@ -49,6 +97,7 @@ REYMAN.BD Admin Dashboard
 </header>
 
 
+
 <main>
 
 
@@ -59,257 +108,407 @@ Dashboard
 </h2>
 
 <p>
-Welcome Admin
+Total Products:
+<span id="count">
+0
+</span>
 </p>
 
 </div>
+
+
+
 <div class="card">
+
+
+<h2>
+Add Product
+</h2>
+
+
+<input id="name" placeholder="Product Name">
+
+
+<textarea id="description"
+placeholder="Description">
+</textarea>
+
+
+<input id="price"
+type="number"
+placeholder="Price">
+
+
+<input id="oldPrice"
+type="number"
+placeholder="Old Price">
+
+
+<input id="category"
+placeholder="Category">
+
+
+<input id="stock"
+type="number"
+placeholder="Stock Quantity">
+
+
+<input id="image"
+placeholder="Image URL">
+
+
+<button onclick="addProduct()">
+
+Save Product
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+<div class="card">
+
 
 <h2>
 Products
 </h2>
 
-<p id="productCount">
-Loading products...
-</p>
 
-<div id="productList"></div>
-<button onclick="showAddProduct()">
-Add Product
-</button>
+<div id="productList">
 
+Loading...
 
-<div id="addProductForm" style="display:none;">
-
-<h3>Add New Product</h3>
-
-
-<input id="productName" placeholder="Product name">
-
-<br><br>
-
-<input id="productPrice" type="number" placeholder="Price">
-<br><br>
-
-<input 
-id="productOldPrice" 
-type="number" 
-placeholder="Old Price">
-<br><br>
-<br><br>
-
-<input 
-id="productCategory" 
-type="text" 
-placeholder="Category">
-<input id="productImage" type="file" accept="image/*">
-
-<br><br>
-
-<button onclick="addProduct()">
-Save Product
-</button>
-
-
-<button onclick="hideAddProduct()">
-Cancel
-</button>
+</div>
 
 
 </div>
-</div>
+
+
 
 </main>
 
+
+
+
 <script>
+
+
+// ==========================
+// SUPABASE CONNECTION
+// ==========================
+
 
 const SUPABASE_URL =
 "https://yrrhcxhjqttyjwdelkyb.supabase.co";
 
+
 const SUPABASE_KEY =
+
 "sb_publishable_7VPqTiccK6qEycDOMSprvA_AZ2ncp8k";
 
 
 const supabaseClient =
 supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+// ==========================
+// LOAD PRODUCTS
+// ==========================
+
+
+async function loadProducts(){
+let products = [];
+
+const {data,error}=
+
+await supabaseClient
+.from("products")
+.select("*")
+.order("id",{ascending:false});
+
+
+
+if(error){
+
+console.log(error);
+return;
+
+}
+
+ products = data;
+
+
+document.getElementById("count")
+.innerText=data.length;
+
+
+
+let html="";
+
+
+
+data.forEach(product=>{
+
+
+html+=`
+
+<div class="product">
+
+
+<h3>
+${product.name}
+</h3>
+
+
+<p>
+${product.description || ""}
+</p>
+
+
+<p>
+Price: ${product.price}
+</p>
+
+
+<p>
+Old Price: ${product.old_price || ""}
+</p>
+
+
+<p>
+Category: ${product.category || ""}
+</p>
+
+
+<p>
+Stock: ${product.stock || ""}
+</p>
+
+
+
+<button onclick="editProduct('${product.id}')">
+
+Edit
+
+</button>
+
+
+
+<button onclick="deleteProduct('${product.id}')">
+
+Delete
+
+</button>
+
+
+
+</div>
+
+
+`;
+
+
+});
+
+
+
+document.getElementById("productList")
+.innerHTML=html;
+
+
+}
+
+
+
+
+
+// ==========================
+// ADD PRODUCT
+// ==========================
+
+
+async function addProduct(){
+
+
+const product={
+
+
+name:
+document.getElementById("name").value,
+
+
+description:
+document.getElementById("description").value,
+
+
+price:
+Number(document.getElementById("price").value),
+
+
+old_price:
+Number(document.getElementById("oldPrice").value),
+
+
+category:
+document.getElementById("category").value,
+
+
+stock:
+Number(document.getElementById("stock").value),
+
+
+image:
+document.getElementById("image").value
+
+
+};
+
+
+
+const {error}=
+
+await supabaseClient
+.from("products")
+.insert(product);
+
+
+
+if(error){
+
+alert(error.message);
+return;
+
+}
+
+
+
+alert("Product Added");
+
+
+loadProducts();
+
+
+}
+
+
+
+
+
+// ==========================
+// EDIT
+// ==========================
+
+
+function editProduct(id){
+
+    const product =
+    products.find(
+    p => p.id == id
+    );
+
+
+    if(!product){
+
+        alert("Product not found");
+
+        return;
+
+    }
+
+
+    document.getElementById("name").value =
+    product.name;
+
+
+    document.getElementById("description").value =
+    product.description;
+
+
+    document.getElementById("price").value =
+    product.price;
+
+
+    document.getElementById("oldPrice").value =
+    product.old_price;
+
+
+    document.getElementById("category").value =
+    product.category;
+
+
+    document.getElementById("stock").value =
+    product.stock;
+
+
+}
+
+
+
+
+// ==========================
+// DELETE
+// ==========================
+
+
+async function deleteProduct(id){
+
+
+let ok =
+confirm(
+"Delete Product?"
 );
 
 
-console.log("Supabase Connected");
-async function loadProducts() {
 
-    const productCount =
-        document.getElementById("productCount");
-
-    const productList =
-        document.getElementById("productList");
+if(!ok)
+return;
 
 
-    productCount.innerText =
-        "Loading products...";
+
+const {error}=
+
+await supabaseClient
+.from("products")
+.delete()
+.eq("id",id);
 
 
-    const { data, error } =
-        await supabaseClient
-            .from("products")
-            .select("*");
 
+if(error){
 
-    if (error) {
-
-        productCount.innerText =
-            "Error loading products";
-
-        console.log(error);
-
-        return;
-    }
-
-
-    productCount.innerText =
-        data.length + " product(s) found";
-
-
-    productList.innerHTML = "";
-
-console.log(data);
-    data.forEach(product => {
-
-        productList.innerHTML += `
-
-        <div style="
-        border:1px solid #ddd;
-        padding:15px;
-        margin-top:10px;
-        border-radius:10px;
-        ">
-
-        <h3>${product.name}</h3>
-
-        <p>
-        Price: ${product.price}
-        </p>
-<button onclick="editProduct('${product.id}')">
-Edit
-</button>
-<button onclick="deleteProduct('${product.id}')">
-Delete
-</button>
-
-        </div>
-
-        `;
-
-    });
+alert(error.message);
+return;
 
 }
-  async function deleteProduct(id) {
-
-    const confirmDelete =
-        confirm("Delete this product?");
-
-    if (!confirmDelete) {
-        return;
-    }
 
 
 
-}
-    function editProduct(id) {
-
-    alert("EDIT WORKING");
-
-}
-    const { error } =
-        await supabaseClient
-            .from("products")
-            .delete()
-            .eq("id", id);
+alert("Deleted");
 
 
-    if (error) {
-
-        alert(error.message);
-
-        return;
-    }
-
-console.log("Deleted ID:", id);
-    alert("Product deleted");
-
-location.reload();
-
-}  
 loadProducts();
-function showAddProduct() {
 
-    document.getElementById(
-        "addProductForm"
-    ).style.display = "block";
 
 }
 
 
-function hideAddProduct() {
-
-    document.getElementById(
-        "addProductForm"
-    ).style.display = "none";
-
-}
-async function addProduct() {
-
-    const name =
-        document.getElementById("productName").value;
-
-    const price =
-        document.getElementById("productPrice").value;
- const oldPrice =
-    document.getElementById("productOldPrice").value;
-
-const category =
-    document.getElementById("productCategory").value;
-    const { error } =
-        await supabaseClient
-            .from("products")
-.insert([
-    {
-    name: name,
-    price: Number(price),
-    Old_price: oldPrice
-        ? Number(oldPrice)
-        : 0,
-    category: category
-}
-]);
 
 
-    if (error) {
-
-    alert(
-        error.message
-    );
-
-    console.log(error);
-
-    return;
-}
-
-
-    alert(
-        "Product added successfully"
-    );
-
-
-    hideAddProduct();
- alert("loadProducts started");
-    loadProducts();
-
-}
 loadProducts();
+
+
+
 </script>
+
+
+
 </body>
 
 </html>
