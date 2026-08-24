@@ -191,7 +191,7 @@ console.log(data);
         <p>
         Price: ${product.price}
         </p>
-<button>
+<button onclick="editProduct('${product.id}')">
 Edit
 </button>
 <button onclick="deleteProduct('${product.id}')">
@@ -214,7 +214,11 @@ Delete
         return;
     }
 
+function editProduct(id) {
 
+    alert("Edit Product ID: " + id);
+
+}
     const { error } =
         await supabaseClient
             .from("products")
