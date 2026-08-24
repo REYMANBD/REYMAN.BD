@@ -471,13 +471,14 @@ if(!ok)
 return;
 
 
-
-const {error}=
+const {data,error}=
 
 await supabaseClient
 .from("products")
 .delete()
-.eq("id",id);
+.eq("id",id)
+.select();
+
 
 
 
@@ -490,7 +491,15 @@ return;
 
 
 
-alert("Deleted");
+if(data.length > 0){
+
+    alert("Deleted successfully");
+
+}else{
+
+    alert("No product was deleted");
+
+}
 
 
 loadProducts();
